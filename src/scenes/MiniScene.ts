@@ -6,7 +6,7 @@ import { drawScene, ICON_SCENE, figure, prop, makeIcon, type Icon } from '../art
 import { setMood, sfx } from '../audio';
 
 // 화면에 쓰이는 글자 (폰트 미리 불러오기용)
-export const MINI_TEXT = '재앙 번째 기회 다시 도전 성공 아쉬워요 하나님이 도와주실 거예요 도움을 받아 조금 쉬워졌어요 지팡이 들기 순서대로 눌러요 남은 시간 초 찾았어요 빛을 움직여 힌트 이쪽이에요 마리 개 가만히 움직였어요 두려워도 서 있어요 소고 ❤️';
+export const MINI_TEXT = '재앙 번째 기회 다시 도전 성공 아쉬워요 하나님이 도와주실 거예요 도움을 받아 조금 쉬워졌어요 지팡이 들기 순서대로 눌러요 남은 시간 초 찾았어요 빛을 움직여 힌트 이쪽이에요 마리 개 가만히 움직였어요 두려워도 서 있어요 소고 팔의 힘 아론과 훌이 받쳐 줘요 내려가요 꾹 눌러요 톡톡 ❤️';
 
 const attempts: Record<string, number> = {};
 type Game = MiniGame & { nodeId: string };
@@ -51,7 +51,7 @@ export class MiniScene extends Phaser.Scene {
     this.showLives();
 
     ({ timing: () => this.timing(), tap: () => this.tapGame(), dodge: () => this.dodge(),
-       seek: () => this.seek(), sequence: () => this.sequence(), wait: () => this.waitGame() })[g.kind]();
+       seek: () => this.seek(), sequence: () => this.sequence(), wait: () => this.waitGame(), raise: () => this.raise() })[g.kind]();
   }
 
   private showLives() {
@@ -115,7 +115,7 @@ export class MiniScene extends Phaser.Scene {
         zc = this.rnd(0.2, 0.8); place();
       } else this.loseLife();
     };
-    button(this, W / 2, 454, 320, 70, g.fig === 'miriam' ? '🥁 소고 치기!' : '🙌 지팡이 들기!', press, 0x8f6a3f);
+    button(this, W / 2, 454, 320, 70, g.btn ?? (g.fig === 'miriam' ? '🥁 소고 치기!' : '🙌 지팡이 들기!'), press, 0x8f6a3f);
     this.input.keyboard?.on('keydown-SPACE', press);
     this.tick = (dt) => {
       pos += dir * dt * (base + hits * 0.00012);
@@ -263,6 +263,54 @@ export class MiniScene extends Phaser.Scene {
           this.tweens.add({ targets: btns[hintIdx], scale: 1.05, duration: 350, yoyo: true, repeat: 3 });
         }
       }
+    };
+  }
+
+  // ── 7) 팔 들기: 누르고 있거나 톡톡 눌러서 지팡이를 든 팔이 내려가지 않게 해요 ──
+  //    시간이 갈수록 팔이 무거워지다가, 절반쯤 지나면 아론과 훌이 팔을 받쳐 줘요.
+  private raise() {
+    const g = this.g;
+    const total = g.time ?? 20;
+    let left = total, meter = 0.62, helped = false, low = false;
+    const me = figure(this, 'moses', 700, 324, 0.95, 'awe');
+    const aaron = figure(this, 'aaron', 610, 324, 0.95, 'smile').setAlpha(0);
+    const hur = figure(this, 'hur', 790, 324, 0.95, 'smile').setAlpha(0);
+    const amalek = figure(this, 'amalek', 150, 324, 0.8, 'angry');
+    const joshua = figure(this, 'joshua', 300, 324, 0.8, 'angry');
+    const bar = this.add.rectangle(W / 2 - 300, 466, 0, 24, 0x44cc66).setOrigin(0, 0.5);
+    this.add.rectangle(W / 2, 466, 604, 30, 0x000000, 0).setStrokeStyle(3, 0xffffff);
+    txt(this, W / 2 - 300, 436, '💪 팔의 힘', 22, '#ffe9a8');
+    const status = txt(this, W / 2, 508, '', 24, '#ffe9a8').setOrigin(0.5);
+    const shout = txt(this, W / 2, 400, '', 28, '#ffffff').setOrigin(0.5).setStroke('#000000', 5);
+    const space = this.input.keyboard?.addKey('SPACE');
+
+    const tap = () => { if (!this.ended) { meter = Math.min(1, meter + 0.08); sfx('pop'); } };
+    this.input.on('pointerdown', tap);
+    this.input.keyboard?.on('keydown-SPACE', tap);
+
+    this.tick = (dt) => {
+      const s = dt / 1000, prog = 1 - Math.max(0, left) / total;
+      const holding = this.input.activePointer.isDown || !!space?.isDown;
+      const decay = (0.18 + 0.25 * prog) * (helped ? 0.55 : 1) * (this.easy ? 0.7 : 1);
+      meter = Math.min(1, meter + ((holding ? 0.3 : 0) - decay) * s);
+      left -= s;
+
+      if (!helped && prog >= 0.5) {
+        helped = true; sfx('chime');
+        this.tweens.add({ targets: [aaron, hur], alpha: 1, duration: 500 });
+        shout.setText('아론과 훌이 팔을 받쳐 줘요!');
+        this.time.delayedCall(2200, () => shout.setText(''));
+      }
+      if (meter < 0.25 && !low) { low = true; shout.setText('팔이 내려가요! 꾹 누르거나 톡톡 눌러요!'); this.time.delayedCall(1500, () => shout.setText('')); }
+      if (meter > 0.4) low = false;
+
+      me.y = 324 + (1 - meter) * 14;
+      joshua.x = 300 + (meter - 0.5) * 170; amalek.x = joshua.x - 150 - (meter - 0.5) * 60;   // 팔이 높을수록 이스라엘이 밀어붙여요
+      bar.width = 600 * Math.max(0, meter);
+      bar.setFillStyle(meter < 0.25 ? 0xe05050 : meter < 0.5 ? 0xe0b040 : 0x44cc66);
+      status.setText(`⏱️ ${Math.max(0, Math.ceil(left))}초`);
+      if (meter <= 0) this.fail();
+      else if (left <= 0) this.win();
     };
   }
 

@@ -7,7 +7,7 @@ export interface Choice { text: string; next: string; effects?: Effects; flag?: 
 
 // 미니게임: 재앙마다 다른 방식으로 도전해요. 실패해도 괜찮아요 — 다시 도전하면 점점 쉬워져요.
 export interface MiniGame {
-  kind: 'timing' | 'tap' | 'dodge' | 'seek' | 'sequence' | 'wait';
+  kind: 'timing' | 'tap' | 'dodge' | 'seek' | 'sequence' | 'wait' | 'raise';
   title: string;
   prompt: string;
   icon: string;              // 목표물/그림 (tap: 누를 것, dodge: 떨어지는 것, seek: 찾을 것)
@@ -20,6 +20,8 @@ export interface MiniGame {
   win: string;               // 성공하면 갈 노드
   art?: string;              // 배경 그림 이름 (없으면 icon으로 고름)
   fig?: string;              // timing: 가운데에 서 있는 인물 (기본 moses)
+  btn?: string;              // timing: 버튼에 쓸 글자 (기본 "🙌 지팡이 들기!")
+                             // raise: time(초) 동안 팔을 내리지 않고 버티기
   mood?: Mood;               // 배경음악 (기본: 긴장감 / 순서 맞추기는 잔잔하게)
   plague?: number;
   bg?: number;

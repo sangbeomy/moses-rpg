@@ -5,8 +5,8 @@ import { state, save } from '../state';
 import { drawBackdrop, figure, prop } from '../art';
 import { setMood, sfx } from '../audio';
 
-const CARD_THEME: Record<number, string> = { 1: 'palace', 2: 'desert', 3: 'mountain', 4: 'storm', 5: 'sea' };
-const CARD_BG: Record<number, number> = { 1: 0xd9a441, 2: 0xe0b878, 3: 0x7a9a5a, 4: 0x4a5a7a, 5: 0x5a9ad0 };
+const CARD_THEME: Record<number, string> = { 1: 'palace', 2: 'desert', 3: 'mountain', 4: 'storm', 5: 'sea', 6: 'sinai' };
+const CARD_BG: Record<number, number> = { 1: 0xd9a441, 2: 0xe0b878, 3: 0x7a9a5a, 4: 0x4a5a7a, 5: 0x5a9ad0, 6: 0x6a5a8a };
 
 // 챕터 시작 카드 / 마지막 엔딩 카드
 export class CardScene extends Phaser.Scene {
@@ -23,9 +23,9 @@ export class CardScene extends Phaser.Scene {
       figure(this, 'moses', 300, 480, 1.4, 'smile');
       figure(this, 'miriam', 440, 480, 1.3, 'smile');
       this.add.rectangle(W / 2, 150, W - 120, 250, 0x140f22, 0.82).setStrokeStyle(3, 0xffe9a8);
-      txt(this, W / 2, 80, '모세 이야기 1부 끝!', 52, '#ffe9a8').setOrigin(0.5);
+      txt(this, W / 2, 80, '모세 이야기, 여기까지!', 52, '#ffe9a8').setOrigin(0.5);
       txt(this, W / 2, 148, `믿음 ${state.faith}  ·  용기 ${state.courage}  ·  지혜 ${state.wisdom}`, 28, '#ffffff').setOrigin(0.5);
-      txt(this, W / 2, 205, '다음 이야기: 광야의 모험 — 곧 만나요!', 22, '#d8cdf2').setOrigin(0.5);
+      txt(this, W / 2, 205, '다음 이야기: 약속의 땅을 향해 — 곧 만나요!', 22, '#d8cdf2').setOrigin(0.5);
       button(this, W / 2, 280, 260, 52, '처음으로', () => this.scene.start('Title'));
       return;
     }

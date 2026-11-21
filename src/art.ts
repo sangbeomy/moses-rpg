@@ -34,6 +34,9 @@ export const FIG: Record<string, FigDef> = {
   miriam:   { robe: 0x7a5ab5, trim: 0xf2d070, sash: 0xf2d070, skin: 0xe0b08a, hair: 0x2a1a10, head: 'veil', hc: 0xf0e0f0, tamb: true },
   shepherd: { robe: 0x6a6a6a, trim: 0x3a3a3a, sash: 0x3a3a3a, skin: 0xc98a5a, hair: 0x2a2a2a, beard: 0x2a2a2a, head: 'cloth', hc: 0x8a8a8a, hc2: 0x6a6a6a },
   magician: { robe: 0x3a2a5a, trim: 0xd4a62a, sash: 0xd4a62a, skin: 0xc98a5a, hair: 0x1a1a1a, head: 'cloth', hc: 0x3a2a5a, hc2: 0xd4a62a },
+  joshua:   { robe: 0xb5532a, trim: 0x6a6a6a, sash: 0x6a6a6a, skin: 0xe0b08a, hair: 0x3a2a1a, head: 'cloth', hc: 0x9a9a9a, hc2: 0x6a6a6a },
+  hur:      { robe: 0x3a6a9a, trim: 0xe8dcc0, sash: 0xe8dcc0, skin: 0xd9a47a, hair: 0x888888, beard: 0xcccccc, head: 'cloth', hc: 0xe8dcc0, hc2: 0x3a6a9a },
+  amalek:   { robe: 0x3a2a2a, trim: 0x8a2a2a, sash: 0x8a2a2a, skin: 0xb8794a, hair: 0x111111, beard: 0x111111, head: 'cloth', hc: 0x2a2a2a, hc2: 0x8a2a2a, whip: true },
 };
 
 export function drawFigure(g: G, f: FigDef, expr: Expr = 'smile') {
@@ -266,6 +269,57 @@ function drawDrops(g: G) {   // 폭풍 / 우박 줄기
 function drawSmoke(g: G) {
   [[-30, -20, 30], [10, -52, 36], [-6, -96, 40], [28, -140, 36]].forEach(([x, y, r], i) => { g.fillStyle(0x6a5a52, 0.55 - i * 0.08); g.fillCircle(x, y, r); });
 }
+function drawPond(g: G, c: number) {
+  g.fillStyle(dark(c, 0.4)); g.fillEllipse(0, 4, 240, 46);
+  g.fillStyle(c); g.fillEllipse(0, 1, 224, 36);
+  g.lineStyle(2, light(c, 0.55), 0.8); g.strokeEllipse(-30, 0, 70, 10); g.strokeEllipse(40, 4, 50, 8);
+}
+function drawBranch(g: G) {
+  g.lineStyle(9, 0x6b4423); g.lineBetween(-40, -8, 40, -40); g.lineBetween(10, -26, 30, -60); g.lineBetween(-10, -17, -22, -48);
+  g.fillStyle(0x4f9a3a); [[40, -46], [30, -66], [-22, -54], [52, -34], [20, -50]].forEach(([x, y]) => g.fillEllipse(x, y, 16, 10));
+}
+function drawRock(g: G) {
+  g.fillStyle(0x000000, 0.16); g.fillEllipse(0, 2, 220, 18);
+  g.fillStyle(0x9a948a); poly(g, [{ x: -100, y: 0 }, { x: -86, y: -70 }, { x: -34, y: -124 }, { x: 40, y: -116 }, { x: 92, y: -62 }, { x: 106, y: 0 }]);
+  g.fillStyle(0xb8b2a6); poly(g, [{ x: -86, y: -70 }, { x: -34, y: -124 }, { x: 40, y: -116 }, { x: 0, y: -84 }, { x: -50, y: -70 }]);
+  g.lineStyle(3, 0x6a645a); g.lineBetween(-10, -84, -4, -50); g.lineBetween(-4, -50, -24, -18); g.lineBetween(50, -90, 62, -40);
+}
+function drawRockWater(g: G) {
+  drawRock(g);
+  g.fillStyle(0x4aa0e8, 0.95); poly(g, [{ x: 20, y: -46 }, { x: 44, y: -46 }, { x: 74, y: 0 }, { x: 10, y: 0 }]);
+  g.fillStyle(0x8ac8f8); poly(g, [{ x: 26, y: -44 }, { x: 34, y: -44 }, { x: 44, y: 0 }, { x: 26, y: 0 }]);
+  g.fillStyle(0x3a90d8); g.fillEllipse(44, 6, 190, 26);
+  g.fillStyle(0xcfeaff); [[64, -20], [88, -8], [4, -10], [98, 4]].forEach(([x, y]) => g.fillCircle(x, y, 4));
+}
+function drawMannaDots(g: G) {
+  const r = rng(31);
+  for (let i = 0; i < 70; i++) {
+    const x = r() * W, y = 60 + r() * 280, s = 2 + r() * 2.6;
+    g.fillStyle(0xffffff, 0.35); g.fillCircle(x, y, s * 2); g.fillStyle(0xfffdf0, 0.95); g.fillCircle(x, y, s);
+  }
+}
+function drawQuail(g: G) {
+  const r = rng(41);
+  for (let i = 0; i < 16; i++) {
+    const x = 60 + r() * 840, y = 80 + r() * 190, s = 0.8 + r() * 0.7;
+    g.fillStyle(0x9a6a3a); g.fillEllipse(x, y, 30 * s, 16 * s);
+    g.fillStyle(0x6a4422); g.fillTriangle(x - 4 * s, y - 2 * s, x - 22 * s, y - 14 * s, x + 6 * s, y - 6 * s);
+    g.fillStyle(0xb88a5a); g.fillCircle(x + 14 * s, y - 4 * s, 6 * s);
+    g.fillStyle(0xe8b030); g.fillTriangle(x + 19 * s, y - 5 * s, x + 26 * s, y - 3 * s, x + 19 * s, y - 2 * s);
+  }
+}
+function drawTablets(g: G) {
+  g.fillStyle(0x000000, 0.18); g.fillEllipse(0, 2, 190, 16);
+  [-44, 44].forEach(x => {
+    g.fillStyle(0x9a948a); g.fillRoundedRect(x - 38, -150, 76, 148, { tl: 36, tr: 36, bl: 6, br: 6 });
+    g.fillStyle(0xb8b2a6); g.fillRoundedRect(x - 32, -144, 64, 138, { tl: 32, tr: 32, bl: 4, br: 4 });
+    g.lineStyle(4, 0x8a6a2a); for (let i = 0; i < 5; i++) g.lineBetween(x - 20, -112 + i * 22, x + 20, -112 + i * 22);
+  });
+}
+function drawLightning(g: G) {
+  g.fillStyle(0xfff6a0, 0.35); g.fillCircle(0, 90, 70);
+  g.fillStyle(0xffe040); poly(g, [{ x: 10, y: 0 }, { x: -24, y: 90 }, { x: -2, y: 90 }, { x: -20, y: 170 }, { x: 30, y: 70 }, { x: 8, y: 70 }, { x: 28, y: 0 }]);
+}
 type PropFn = (g: G) => void;
 const PROPS: Record<string, PropFn> = {
   sheep: drawSheep, cow: drawCow, bush: drawBush, flame: g => drawFlame(g, 1), light: g => drawLight(g),
@@ -274,6 +328,9 @@ const PROPS: Record<string, PropFn> = {
   gnats: g => drawSwarm(g, 0x5a4a3a), chariot: g => drawChariot(g, 1), chariotL: g => drawChariot(g, -1),
   cloud: g => drawPillar(g, 'cloud'), fire: g => drawPillar(g, 'fire'), basket: drawBasket, tent: drawTent,
   drops: drawDrops, smoke: drawSmoke,
+  pondBitter: g => drawPond(g, 0x5a6a3a), pondSweet: g => drawPond(g, 0x3d9fe0), branch: drawBranch,
+  rock: drawRock, rockwater: drawRockWater, mannaDots: drawMannaDots, quail: drawQuail, tablets: drawTablets,
+  lightning: drawLightning,
 };
 
 // ───────────────────────── 작은 아이콘 (미니게임용, 64px 기준) ─────────────────────────
@@ -305,13 +362,20 @@ function drawIconGfx(g: G, kind: string) {
       g.fillStyle(0xc89a3a); g.fillEllipse(0, 14, 50, 22); g.fillTriangle(18, 10, 36, 4, 22, 16);
       g.fillStyle(0xe8b84a); g.fillEllipse(-2, 10, 36, 14);
       g.fillStyle(0xff8a1a); g.fillTriangle(-12, 2, 4, 2, -4, -22); g.fillStyle(0xfff0a0); g.fillTriangle(-8, 2, 0, 2, -4, -10); break;
+    case 'manna':
+      g.fillStyle(0xfff6c0, 0.45); g.fillCircle(0, 0, 28); g.fillStyle(0xfffdf0); g.fillCircle(0, 0, 18);
+      g.fillStyle(0xe8d9a0); g.fillCircle(-5, -5, 5); g.fillCircle(6, 4, 4); break;
+    case 'worm':
+      g.fillStyle(0xa9a060); g.fillCircle(0, 0, 18); g.fillStyle(0x8a7a3a); g.fillCircle(-4, -3, 5);
+      g.fillStyle(0x6a8a2a); [[-10, 8], [0, 10], [10, 8]].forEach(([x, y]) => g.fillCircle(x, y, 6));
+      g.fillStyle(0x111111); g.fillCircle(-12, 8, 1.6); g.fillCircle(-8, 8, 1.6); break;
     case 'hail':
       g.fillStyle(0xcfe8ff); g.fillCircle(0, 0, 20); g.fillStyle(0xffffff); g.fillCircle(-6, -6, 7);
       g.lineStyle(3, 0x8ab8e8); g.strokeCircle(0, 0, 20); break;
     default: break;
   }
 }
-const ICON_KIND: Record<string, string> = { '🐸': 'frog', '🐝': 'bee', '🦗': 'locust', '🐑': 'sheep', '🚶': 'person', '🕯️': 'lamp', '❄️': 'hail' };
+const ICON_KIND: Record<string, string> = { '🐸': 'frog', '🐝': 'bee', '🦗': 'locust', '🐑': 'sheep', '🚶': 'person', '🕯️': 'lamp', '❄️': 'hail', '🍞': 'manna', '🐛': 'worm' };
 
 // 미니게임용: 그림이 있으면 그림(Container), 없으면 이모지 글자
 export type Icon = Phaser.GameObjects.Container | Phaser.GameObjects.Text;
@@ -422,6 +486,24 @@ const THEMES: Record<string, Theme> = {
     g.fillStyle(0xe3c07a); poly(g, [{ x: 196, y: 350 }, { x: 440, y: 246 }, { x: 520, y: 246 }, { x: 764, y: 350 }], true);
     g.fillStyle(0xcaa660); g.fillRect(0, 350, W, 190);
   },
+  hill: (g, bg) => {
+    sky(g, light(bg, 0.45), light(bg, 0.1), 275); sunDisc(g, 180, 110);
+    g.fillStyle(mix(0xb89a7a, bg, 0.3)); g.fillTriangle(60, 285, 300, 285, 180, 190); g.fillTriangle(240, 285, 520, 285, 380, 170);
+    g.fillStyle(sandOf(bg)); g.fillRect(0, 282, W, 258);
+    g.fillStyle(dark(sandOf(bg), 0.1)); g.fillEllipse(700, 350, 430, 150);       // 모세가 서 있는 언덕
+    g.fillStyle(dark(sandOf(bg), 0.2)); g.fillEllipse(480, 540, 1400, 250);
+    g.fillStyle(0x8a8478); g.fillEllipse(560, 322, 40, 18); g.fillEllipse(860, 330, 34, 14);
+  },
+  sinai: (g, bg) => {
+    sky(g, dark(bg, 0.5), bg, 290);
+    [[120, 60, 240], [360, 40, 260], [620, 70, 280], [850, 50, 240]].forEach(([x, y, w]) => { g.fillStyle(dark(bg, 0.35), 0.9); g.fillEllipse(x, y, w, 64); });
+    g.fillStyle(0x6a5a4a); g.fillTriangle(130, 300, 480, 36, 830, 300);
+    g.fillStyle(0x8a7a66); g.fillTriangle(480, 36, 640, 300, 420, 300);
+    g.fillStyle(0x4a3c30); g.fillTriangle(130, 300, 300, 300, 330, 140);
+    g.fillStyle(0xffffff, 0.92); [[440, 66, 90], [500, 58, 100], [560, 76, 80], [470, 90, 110]].forEach(([x, y, w]) => g.fillEllipse(x, y, w, 40));
+    g.fillStyle(mix(0xb09a76, bg, 0.2)); g.fillRect(0, 296, W, 244);
+    g.fillStyle(dark(mix(0xb09a76, bg, 0.2), 0.15)); g.fillEllipse(480, 540, 1400, 250);
+  },
   shore: (g, bg) => {
     sky(g, light(bg, 0.4), light(bg, 0.05), 160);
     g.fillStyle(0x2f7fc0); g.fillRect(0, 150, W, 140);
@@ -494,6 +576,25 @@ const SC: Record<string, Def> = {
   sea_close: { t: 'shore', p: [['chariot', 620, 300, 0.8], ['chariot', 800, 296, 0.6]], f: [['moses', 360, 'awe']] },
   miriam: { t: 'desert', p: [['crowd', 650, 336, 1]], f: [['miriam', 400, 'smile'], ['moses', 520, 'smile']] },
   free: { t: 'desert', p: [['crowd', 600, 336, 1.1]], f: [['moses', 360, 'smile']] },
+  // 6장
+  wilderness: { t: 'desert', p: [['tent', 230, 336, 1.1], ['tent', 400, 330, 0.9], ['tent', 720, 336, 1.2], ['crowd', 560, 342, 0.8]] },
+  marah_bitter: { t: 'desert', p: [['pondBitter', 520, 334, 1.2], ['crowd', 220, 340, 0.8]], f: [['moses', 770, 'worry']] },
+  marah_wood: { t: 'desert', p: [['pondBitter', 580, 334, 1.2], ['branch', 400, 332, 1]], f: [['moses', 300, 'awe']] },
+  marah_sweet: { t: 'desert', p: [['pondSweet', 520, 334, 1.2], ['crowd', 800, 340, 0.8]], f: [['moses', 280, 'smile']] },
+  oasis: { t: 'nile', w: 0x3d9fe0, p: [['palm', 110, 300, 0.9], ['palm', 260, 300, 1], ['palm', 860, 300, 0.9], ['crowd', 560, 340, 0.9]] },
+  manna_field: { t: 'field', p: [['+mannaDots', 0, 0]] },
+  manna: { t: 'field', p: [['crowd', 560, 340, 0.9], ['+mannaDots', 0, 0]], f: [['moses', 330, 'awe']] },
+  quail: { t: 'desert', p: [['tent', 250, 336, 1.1], ['tent', 720, 336, 1.2], ['+quail', 0, 0]] },
+  rock_dry: { t: 'desert', p: [['rock', 700, 336, 1.2], ['crowd', 250, 340, 0.8]], f: [['moses', 500, 'worry']] },
+  rock: { t: 'desert', p: [['rock', 690, 336, 1.3]] },
+  rock_water: { t: 'desert', p: [['rockwater', 650, 336, 1.3], ['crowd', 240, 340, 0.8]], f: [['moses', 470, 'smile']] },
+  hill_empty: { t: 'hill' },
+  amalek: { t: 'hill', f: [['joshua', 360, 'angry'], ['amalek', 560, 'angry']] },
+  raise: { t: 'hill', f: [['joshua', 300, 'angry'], ['amalek', 150, 'angry'], ['aaron', 610, 'smile'], ['moses', 700, 'awe'], ['hur', 790, 'smile']] },
+  raise_win: { t: 'hill', f: [['joshua', 300, 'smile'], ['aaron', 610, 'smile'], ['moses', 700, 'smile'], ['hur', 790, 'smile']] },
+  sinai: { t: 'sinai', p: [['crowd', 330, 340, 0.9], ['+lightning', 640, 30]] },
+  sinai_moses: { t: 'sinai', p: [['light', 480, 150]], f: [['moses', 480, 'awe']] },
+  tablets: { t: 'sinai', p: [['light', 480, 170], ['tablets', 480, 336, 1.3]] },
 };
 
 export const ICON_SCENE: Record<string, string> = {
@@ -508,7 +609,7 @@ export const ICON_SCENE: Record<string, string> = {
 };
 export const SCENE_NAMES = Object.keys(SC);
 
-const SPEAKER_FIG: Record<string, string> = { 모세: 'moses', 바로: 'pharaoh', 이드로: 'jethro', 아론: 'aaron', 미리암: 'miriam', 백성: 'hebrew' };
+const SPEAKER_FIG: Record<string, string> = { 모세: 'moses', 바로: 'pharaoh', 이드로: 'jethro', 아론: 'aaron', 미리암: 'miriam', 백성: 'hebrew', 여호수아: 'joshua', 훌: 'hur' };
 
 interface Opts { bg: number; speaker?: string; compact?: boolean; chapter?: number; figures?: boolean }
 

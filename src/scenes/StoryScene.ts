@@ -6,7 +6,7 @@ import { state, applyEffects, save } from '../state';
 import { drawScene, ICON_SCENE } from '../art';
 import { setMood, sfx, recentUiClick, type Mood } from '../audio';
 
-const CHAPTER_MOOD: Record<number, Mood> = { 1: 'desert', 2: 'desert', 3: 'desert', 4: 'tense', 5: 'desert' };
+const CHAPTER_MOOD: Record<number, Mood> = { 1: 'desert', 2: 'desert', 3: 'desert', 4: 'tense', 5: 'desert', 6: 'desert' };
 let storyChapter = 0;
 let storyMood: Mood = 'desert';
 

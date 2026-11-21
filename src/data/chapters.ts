@@ -177,6 +177,59 @@ export const chapters: Chapter[] = [
       { id: 'end', bg: 0x3a2f4a, icon: '🚶', art: 'free', speaker: '모세', text: '모세와 백성은 이집트 땅을 뒤로하고 광야의 길로 나아갔어요. 앞으로 또 어떤 일이 기다리고 있을까요?', endChapter: true },
     ],
   },
+  {
+    id: 6, title: '광야의 모험', verse: '출애굽기 15–20', start: 'start',
+    nodes: [
+      { id: 'start', bg: 0xe0b878, icon: '🏜️', art: 'wilderness', music: 'desert', verse: '출애굽기 15:22', text: '홍해를 건넌 백성은 넓고 뜨거운 광야로 들어갔어요. 사흘 동안 물을 찾아 걸었지만, 마실 물이 하나도 없었어요.' },
+      { id: 's2', bg: 0xe0b878, icon: '😫', art: 'marah_bitter', verse: '출애굽기 15:23', text: '드디어 마라라는 곳에 도착했어요. 그런데 물이 너무 써서 마실 수가 없었어요! 그래서 이름도 "마라(쓰다)"예요.' },
+      { id: 'c1', bg: 0xe0b878, icon: '😫', art: 'marah_bitter', speaker: '백성', verse: '출애굽기 15:24', text: '"물이 써서 못 마시겠어요! 우리는 뭘 마시란 말이에요?" 백성들이 불평했어요. 모세는 어떻게 할까요?',
+        choices: [
+          { text: '🙏 불평하는 대신 하나님께 부르짖어 기도한다 (믿음 +1)', next: 'god1', effects: { faith: 1 } },
+          { text: '💬 "조금만 참고 함께 기다려 봐요" 하고 달랜다 (지혜 +1)', next: 'god1', effects: { wisdom: 1 } },
+        ] },
+      { id: 'god1', bg: 0xe0b878, icon: '✨', art: 'marah_wood', music: 'holy', speaker: '하나님', verse: '출애굽기 15:25', text: '모세가 하나님께 부르짖자, 하나님이 나무 한 그루를 가리켜 보여 주셨어요. "저 나무를 물에 던져 보아라."' },
+      { id: 'm1', bg: 0xe0b878, icon: '💧', art: 'marah_wood', text: '하나님이 가르쳐 주신 대로 해 봐요!',
+        minigame: { kind: 'sequence', title: '쓴 물을 단물로', prompt: '하나님이 가르쳐 주신 순서대로 눌러요!', icon: '💧', art: 'marah_wood', bg: 0xe0b878, win: 'sweet',
+          steps: ['🙏 하나님께 부르짖어 기도해요', '🌿 하나님이 가리키신 나무를 찾아요', '💧 나무를 물에 던져요', '🥤 단물을 모두 함께 마셔요'] } },
+      { id: 'sweet', bg: 0xe0b878, icon: '💧', art: 'marah_sweet', sfx: 'chime', music: 'desert', verse: '출애굽기 15:25', text: '나무를 던지자 쓰던 물이 달콤한 물이 되었어요! 백성들은 마음껏 마시며 기뻐했어요.', effects: { faith: 1 } },
+      { id: 'elim', bg: 0x9ad0e0, icon: '🌴', art: 'oasis', verse: '출애굽기 15:27', text: '그다음에는 엘림이라는 곳에 갔어요. 거기에는 샘이 열두 개나 있고 종려나무가 일흔 그루나 자라고 있었어요. 백성들은 그곳에서 푹 쉬었어요.' },
+
+      { id: 'hungry', bg: 0xe0b878, icon: '😩', art: 'wilderness', music: 'tense', verse: '출애굽기 16:2-3', text: '한 달쯤 지나자 이번에는 먹을 것이 떨어졌어요. 백성들은 "이집트에서는 고기도 빵도 실컷 먹었는데!" 하고 또 불평했어요.' },
+      { id: 'god2', bg: 0xe0b878, icon: '✨', art: 'wilderness', speaker: '하나님', verse: '출애굽기 16:4', text: '"내가 하늘에서 양식을 비처럼 내려 주겠다. 날마다 그날 먹을 만큼만 거두어라."' },
+      { id: 'quail', bg: 0xe0b878, icon: '🐦', art: 'quail', music: 'desert', sfx: 'whoosh', verse: '출애굽기 16:13', text: '그날 저녁, 메추라기 떼가 날아와 진 안을 가득 덮었어요. 백성들은 고기를 먹을 수 있었어요!' },
+      { id: 'manna0', bg: 0xe0d890, icon: '🍞', art: 'manna', verse: '출애굽기 16:14-15', text: '아침이 되자 땅 위에 서리 같은 하얗고 작은 것이 내려 있었어요. 백성들이 서로 물었어요. "이게 뭐지?" 그것이 바로 "만나"예요.' },
+      { id: 'm2', bg: 0xe0d890, icon: '🍞', art: 'manna_field', text: '아침이에요! 하늘에서 내려온 만나를 거두어요.',
+        minigame: { kind: 'tap', title: '만나 거두기', prompt: '하늘에서 내려온 만나를 눌러서 거두어요! 🐛 벌레 먹은 것은 누르면 안 돼요! (10개)', icon: '🍞', bad: '🐛', art: 'manna_field', goal: 10, time: 20, win: 'manna_r', bg: 0xe0d890 } },
+      { id: 'manna_r', bg: 0xe0d890, icon: '🍞', art: 'manna', sfx: 'chime', verse: '출애굽기 16:19-26', text: '하나님은 날마다 꼭 필요한 만큼만 주셨어요. 욕심을 내서 남겨 두면 벌레가 생겼어요. 여섯째 날에는 이틀 치를 주셔서, 일곱째 날에는 모두 쉴 수 있었어요.', effects: { wisdom: 1 } },
+
+      { id: 'thirst', bg: 0xe0b878, icon: '😫', art: 'rock_dry', music: 'tense', verse: '출애굽기 17:1-3', text: '르비딤에 이르렀지만 또다시 마실 물이 없었어요. 백성들이 모세에게 크게 불평했어요. 모세는 하나님께 간절히 기도했어요.' },
+      { id: 'god3', bg: 0xe0b878, icon: '✨', art: 'rock_dry', music: 'holy', speaker: '하나님', verse: '출애굽기 17:5-6', text: '"지팡이를 들고 백성 앞에 서라. 내가 호렙의 바위 위에 서 있겠다. 네가 바위를 치면 물이 나올 것이다."' },
+      { id: 'm3', bg: 0xe0b878, icon: '💧', art: 'rock', text: '모세가 바위 앞에 섰어요. 지팡이로 바위를 칠 시간이에요!',
+        minigame: { kind: 'timing', title: '반석을 치다', prompt: '표시가 초록 칸에 있을 때 "바위 치기!"를 눌러요 (3번)', icon: '💧', art: 'rock', goal: 3, btn: '🪨 바위 치기!', mood: 'holy', win: 'rock_r', bg: 0xe0b878 } },
+      { id: 'rock_r', bg: 0xe0b878, icon: '💧', art: 'rock_water', sfx: 'splash', music: 'desert', verse: '출애굽기 17:6', text: '바위에서 맑은 물이 콸콸 흘러나왔어요! 백성도 짐승도 모두 시원하게 마셨어요.', effects: { faith: 1 } },
+
+      { id: 'amalek0', bg: 0xd9a070, icon: '⚔️', art: 'amalek', music: 'battle', verse: '출애굽기 17:8-9', text: '그때 아말렉 사람들이 쳐들어와 이스라엘과 싸우려 했어요! 모세가 여호수아에게 말했어요. "용사들을 뽑아 나가 싸우세요. 나는 내일 하나님의 지팡이를 들고 산꼭대기에 서 있겠어요."' },
+      { id: 'hill', bg: 0xd9a070, icon: '⛰️', art: 'raise', verse: '출애굽기 17:10-11', text: '모세는 아론, 훌과 함께 산꼭대기에 올랐어요. 모세가 팔을 높이 들면 이스라엘이 이기고, 팔이 내려오면 아말렉이 이겼어요!' },
+      { id: 'm4', bg: 0xd9a070, icon: '💪', art: 'hill_empty', text: '모세의 팔이 내려가지 않게 도와줘요! 꾹 누르고 있어도 되고, 톡톡 눌러도 돼요.',
+        minigame: { kind: 'raise', title: '팔을 높이 들어요', prompt: '화면을 꾹 누르거나 톡톡 눌러서 지팡이를 높이 들고 있어요! 팔이 내려가면 안 돼요!', icon: '💪', art: 'hill_empty', time: 20, mood: 'battle', win: 'raise_r', bg: 0xd9a070 } },
+      { id: 'raise_r', bg: 0xd9a070, icon: '🎉', art: 'raise_win', music: 'triumph', sfx: 'win', verse: '출애굽기 17:12-13', text: '모세의 팔이 무거워지자, 아론과 훌이 돌을 놓아 앉게 하고 양쪽에서 팔을 붙들어 주었어요. 팔이 해 질 때까지 내려오지 않았고, 여호수아가 아말렉을 물리쳤어요! 서로 도우면 어려운 일도 이길 수 있어요.', effects: { courage: 1, faith: 1 } },
+
+      { id: 'sinai1', bg: 0x6a5a8a, icon: '⛰️', art: 'sinai', music: 'holy', sfx: 'thunder', verse: '출애굽기 19:1-2, 16', text: '석 달째 되던 날, 백성들은 시내 산 앞에 이르렀어요. 산에는 짙은 구름이 덮이고 천둥과 번개가 치고, 나팔 소리가 크게 울렸어요. 백성들은 모두 두려워 떨었어요.' },
+      { id: 'sinai2', bg: 0x6a5a8a, icon: '✨', art: 'sinai_moses', speaker: '하나님', verse: '출애굽기 19:5-6', text: '모세가 산 위로 올라가자 하나님이 말씀하셨어요. "너희가 내 말을 잘 듣고 내 약속을 지키면, 너희는 모든 백성 가운데서 내게 특별한 백성이 될 것이다."' },
+      { id: 'c2', bg: 0x6a5a8a, icon: '🙋', art: 'sinai', speaker: '백성', verse: '출애굽기 19:8', text: '"여호와께서 말씀하신 것을 우리가 다 하겠습니다!" 백성들이 입을 모아 대답했어요. 모세는 어떻게 할까요?',
+        choices: [
+          { text: '🙏 백성들의 대답을 하나님께 그대로 전한다 (믿음 +1)', next: 'law', effects: { faith: 1 } },
+          { text: '🤝 말씀을 지킬 수 있게 서로 돕자고 말해 준다 (지혜 +1)', next: 'law', effects: { wisdom: 1 } },
+        ] },
+      { id: 'law', bg: 0x6a5a8a, icon: '📜', art: 'tablets', speaker: '하나님', verse: '출애굽기 20:1-3', text: '하나님이 모세에게 열 가지 계명을 주셨어요. 앞의 네 가지는 하나님을 사랑하는 방법이에요.' },
+      { id: 'm5', bg: 0x6a5a8a, icon: '📜', art: 'tablets', text: '하나님이 주신 첫째부터 넷째 계명을 순서대로 기억해 봐요!',
+        minigame: { kind: 'sequence', title: '십계명 순서 맞추기', prompt: '첫째부터 넷째 계명을 순서대로 눌러요!', icon: '📜', art: 'tablets', mood: 'holy', bg: 0x6a5a8a, win: 'law_r',
+          steps: ['첫째, 하나님 외에 다른 신을 두지 말아요', '둘째, 우상을 만들어 섬기지 말아요', '셋째, 하나님의 이름을 함부로 부르지 말아요', '넷째, 안식일을 기억하고 거룩하게 지켜요'] } },
+      { id: 'law_r', bg: 0x6a5a8a, icon: '📜', art: 'tablets', verse: '출애굽기 20:12-17', text: '나머지 여섯 계명은 사람들과 사이좋게 지내는 방법이에요. 부모님을 공경하고, 해치지 않고, 가정을 소중히 지키고, 훔치지 않고, 거짓말하지 않고, 남의 것을 탐내지 말라고 하셨어요.', effects: { faith: 1, wisdom: 1 } },
+      { id: 'gift', bg: 0xe0b878, icon: '💛', art: 'wilderness', music: 'desert', verse: '출애굽기 31:18', text: '하나님은 이 말씀을 돌판에 써서 모세에게 주셨어요. 하나님의 사랑과 약속이 가득 담긴 선물이었어요.' },
+      { id: 'end', bg: 0x3a2f4a, icon: '🌅', art: 'wilderness', speaker: '모세', text: '모세와 백성들은 시내 산 아래에서 하나님의 말씀을 마음에 새겼어요. 그리고 약속의 땅을 향해 다시 길을 떠났어요. (다음 이야기: 약속의 땅을 향해 — 곧 만나요!)', endChapter: true },
+    ],
+  },
 ];
 
 // 재앙 한 편 = 경고(a) → 미니게임(m) → 결과(r)
