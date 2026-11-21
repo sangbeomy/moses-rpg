@@ -49,13 +49,17 @@ export class StoryScene extends Phaser.Scene {
     txt(this, W - 16, 8, `❤️ ${state.hp}/${state.maxHp}  🙏 ${state.faith}  🛡️ ${state.courage}  💡 ${state.wisdom}`, 20).setOrigin(1, 0);
     if (n.verse) txt(this, W / 2, 56, `📖 ${n.verse}`, 18, '#fff3c4').setOrigin(0.5, 0);
 
-    // 대화창
-    this.add.rectangle(W / 2, H - 100, W - 40, 180, 0x140f22, 0.92).setStrokeStyle(3, 0xffe9a8);
+    // 화면 아래 영역 구분:
+    //  [이름표]  y 304~342  (대화창 바로 위, 대화창과 겹치지 않음)
+    //  [대화창]  y 346~532  (메시지는 이 안쪽에서만 표시)
+    const BOX_TOP = 346, BOX_BOTTOM = 532;
+    this.add.rectangle(W / 2, (BOX_TOP + BOX_BOTTOM) / 2, W - 40, BOX_BOTTOM - BOX_TOP, 0x140f22, 0.94).setStrokeStyle(3, 0xffe9a8);
     if (n.speaker) {
-      this.add.rectangle(110, H - 192, 150, 36, 0x5b3f8f).setStrokeStyle(2, 0xffe9a8);
-      txt(this, 110, H - 192, n.speaker, 22, '#ffffff').setOrigin(0.5);
+      const tagW = Math.max(130, n.speaker.length * 26 + 50);
+      this.add.rectangle(20 + tagW / 2, 323, tagW, 38, 0x5b3f8f).setStrokeStyle(3, 0xffe9a8);
+      txt(this, 20 + tagW / 2, 323, n.speaker, 22, '#ffffff').setOrigin(0.5);
     }
-    this.body = txt(this, 50, H - 178, '', 26, '#ffffff', W - 100);
+    this.body = txt(this, 48, BOX_TOP + 14, '', 24, '#ffffff', W - 96);
     this.typeOut(n.text);
 
     this.input.removeAllListeners();
@@ -92,7 +96,7 @@ export class StoryScene extends Phaser.Scene {
       });
     } else {
       this.advanceReady = true;
-      const hint = txt(this, W - 50, H - 36, n.battle ? '⚔️ 전투 시작 ▶' : n.minigame ? '🎮 도전! ▶' : n.endChapter ? '장 마치기 ▶' : '▶', 22, '#ffe9a8').setOrigin(1, 0.5);
+      const hint = txt(this, W - 44, H - 20,n.battle ? '⚔️ 전투 시작 ▶' : n.minigame ? '🎮 도전! ▶' : n.endChapter ? '장 마치기 ▶' : '▶', 20, '#ffe9a8').setOrigin(1, 0.5);
       this.tweens.add({ targets: hint, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
     }
   }
