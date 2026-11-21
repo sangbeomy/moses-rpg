@@ -7,6 +7,7 @@ import { drawScene, ICON_SCENE } from '../art';
 import { setMood, sfx, recentUiClick, type Mood } from '../audio';
 
 const CHAPTER_MOOD: Record<number, Mood> = { 1: 'desert', 2: 'desert', 3: 'desert', 4: 'tense', 5: 'desert', 6: 'desert' };
+const history: string[] = [];          // 이 장에서 지나온 장면들 (뒤로가기용)
 let storyChapter = 0;
 let storyMood: Mood = 'desert';
 
@@ -49,7 +50,7 @@ export class StoryScene extends Phaser.Scene {
     });
 
     // 배경음악 / 효과음
-    if (state.chapter !== storyChapter) { storyChapter = state.chapter; storyMood = CHAPTER_MOOD[state.chapter] ?? 'desert'; }
+    if (state.chapter !== storyChapter) { history.length = 0; storyChapter = state.chapter; storyMood = CHAPTER_MOOD[state.chapter] ?? 'desert'; }
     if (n.music) storyMood = n.music;
     setMood(n.speaker === '하나님' ? 'holy' : storyMood);
     if (applyFx && n.sfx) sfx(n.sfx);
@@ -129,7 +130,18 @@ export class StoryScene extends Phaser.Scene {
     }
   }
 
+  /** 뒤로가기: 방금 본 장면으로 돌아가요 (처음 장면이면 false) */
+  goBack(): boolean {
+    const prev = history.pop();
+    if (!prev) return false;
+    this.node = this.find(prev);
+    this.render(this.node, false);       // 능력치는 다시 올리지 않아요
+    return true;
+  }
+
   private go(id: string) {
+    history.push(this.node.id);
+    if (history.length > 200) history.shift();
     this.node = this.find(id);
     this.render(this.node, true);
   }
