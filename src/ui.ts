@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { sfx, markUiClick } from './audio';
 
 export const W = 960;
 export const H = 540;
@@ -22,7 +23,7 @@ export function button(scene: Phaser.Scene, x: number, y: number, w: number, h: 
   c.setInteractive({ useHandCursor: true });
   c.on('pointerover', () => bg.setFillStyle(Phaser.Display.Color.ValueToColor(fill).lighten(20).color));
   c.on('pointerout', () => bg.setFillStyle(fill));
-  c.on('pointerdown', onClick);
+  c.on('pointerdown', () => { markUiClick(); sfx('click'); onClick(); });
   return c;
 }
 

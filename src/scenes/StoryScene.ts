@@ -3,6 +3,12 @@ import { W, H, txt, button } from '../ui';
 import { chapters } from '../data/chapters';
 import type { StoryNode } from '../data/types';
 import { state, applyEffects, save } from '../state';
+import { drawScene, ICON_SCENE } from '../art';
+import { setMood, sfx, recentUiClick, type Mood } from '../audio';
+
+const CHAPTER_MOOD: Record<number, Mood> = { 1: 'desert', 2: 'desert', 3: 'desert', 4: 'tense', 5: 'desert' };
+let storyChapter = 0;
+let storyMood: Mood = 'desert';
 
 export class StoryScene extends Phaser.Scene {
   private node!: StoryNode;
@@ -36,12 +42,17 @@ export class StoryScene extends Phaser.Scene {
     if (applyFx) applyEffects(n.effects);
     save();
 
-    // 배경과 일러스트(임시: 이모지)
+    // 장면 그림. 선택지가 있는 장면은 인물을 작게 그려서 위쪽 선택 버튼과 겹치지 않게 해요.
     this.add.rectangle(W / 2, H / 2, W, H, n.bg ?? 0x333333);
-    this.add.rectangle(W / 2, 200, W, 400, 0x000000, 0.12);
-    // 선택지가 있는 장면은 그림을 아래로 내리고 작게 (버튼이 위쪽을 차지)
-    if (n.choices) txt(this, W / 2, 292, n.icon ?? '', 80).setOrigin(0.5);
-    else txt(this, W / 2, 190, n.icon ?? '', 150).setOrigin(0.5);
+    drawScene(this, n.art ?? ICON_SCENE[n.icon ?? ''], {
+      bg: n.bg ?? 0x333333, speaker: n.speaker, compact: !!n.choices, chapter: state.chapter,
+    });
+
+    // 배경음악 / 효과음
+    if (state.chapter !== storyChapter) { storyChapter = state.chapter; storyMood = CHAPTER_MOOD[state.chapter] ?? 'desert'; }
+    if (n.music) storyMood = n.music;
+    setMood(n.speaker === '하나님' ? 'holy' : storyMood);
+    if (applyFx && n.sfx) sfx(n.sfx);
 
     // 상단 HUD
     this.add.rectangle(W / 2, 22, W, 44, 0x000000, 0.45);
@@ -102,6 +113,7 @@ export class StoryScene extends Phaser.Scene {
   }
 
   private onTap() {
+    if (recentUiClick()) return;     // 소리 버튼을 누른 것은 이야기 넘기기로 세지 않아요
     if (this.typing) { this.finishTyping(); return; }
     if (!this.advanceReady) return;
     const n = this.node;

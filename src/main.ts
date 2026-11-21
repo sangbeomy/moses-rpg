@@ -5,6 +5,8 @@ import { CardScene } from './scenes/CardScene';
 import { StoryScene } from './scenes/StoryScene';
 import { BattleScene } from './scenes/BattleScene';
 import { MiniScene, MINI_TEXT } from './scenes/MiniScene';
+import { GalleryScene } from './scenes/GalleryScene';
+import { HudScene } from './scenes/HudScene';
 import { chapters } from './data/chapters';
 import { enemies } from './data/enemies';
 
@@ -20,8 +22,11 @@ async function start() {
     height: H,
     backgroundColor: '#1b1626',
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [TitleScene, CardScene, StoryScene, BattleScene, MiniScene],
+    scene: [TitleScene, CardScene, StoryScene, BattleScene, MiniScene, GalleryScene, HudScene],
   });
+  // 개발용 그림 모아보기: ?gallery=1
+  const gal = /gallery=(\d+)/.exec(location.search);
+  if (gal) game.events.once('ready', () => { game.scene.stop('Title'); game.scene.start('Gallery', { page: Number(gal[1]) }); });
   // 테스트용: 주소 끝에 ?debug 를 붙이면 window.__game 으로 접근 가능
   if (location.search.includes('debug')) (window as unknown as { __game: Phaser.Game }).__game = game;
 }
