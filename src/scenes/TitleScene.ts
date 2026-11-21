@@ -10,7 +10,7 @@ export class TitleScene extends Phaser.Scene {
     this.add.rectangle(W / 2, H - 70, W, 140, 0xc9a45c);
     txt(this, W / 2, 80, '📜', 90).setOrigin(0.5);
     txt(this, W / 2, 170, '모세 이야기', 64, '#ffe9a8').setOrigin(0.5);
-    txt(this, W / 2, 232, '성경 속 영웅들의 모험 · 1장', 24, '#d8cdf2').setOrigin(0.5);
+    txt(this, W / 2, 232, '성경 속 영웅들의 모험 · 모세 편', 24, '#d8cdf2').setOrigin(0.5);
 
     button(this, W / 2, 330, 280, 60, '▶ 새로 시작', () => {
       resetState();

@@ -45,7 +45,7 @@ export class StoryScene extends Phaser.Scene {
 
     // 상단 HUD
     this.add.rectangle(W / 2, 22, W, 44, 0x000000, 0.45);
-    txt(this, 16, 8, `제${state.chapter}장 ${this.chapter.title}`, 20, '#ffe9a8');
+    txt(this, 16, 8, `제${state.chapter}장 ${this.chapter.title}${n.plague ? ` · 재앙 ${n.plague}/10` : ''}`, 20, '#ffe9a8');
     txt(this, W - 16, 8, `❤️ ${state.hp}/${state.maxHp}  🙏 ${state.faith}  🛡️ ${state.courage}  💡 ${state.wisdom}`, 20).setOrigin(1, 0);
     if (n.verse) txt(this, W / 2, 56, `📖 ${n.verse}`, 18, '#fff3c4').setOrigin(0.5, 0);
 
@@ -92,7 +92,7 @@ export class StoryScene extends Phaser.Scene {
       });
     } else {
       this.advanceReady = true;
-      const hint = txt(this, W - 50, H - 36, n.battle ? '⚔️ 전투 시작 ▶' : n.endChapter ? '장 마치기 ▶' : '▶', 22, '#ffe9a8').setOrigin(1, 0.5);
+      const hint = txt(this, W - 50, H - 36, n.battle ? '⚔️ 전투 시작 ▶' : n.minigame ? '🎮 도전! ▶' : n.endChapter ? '장 마치기 ▶' : '▶', 22, '#ffe9a8').setOrigin(1, 0.5);
       this.tweens.add({ targets: hint, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
     }
   }
@@ -103,6 +103,8 @@ export class StoryScene extends Phaser.Scene {
     const n = this.node;
     if (n.battle) {
       this.scene.start('Battle', n.battle);
+    } else if (n.minigame) {
+      this.scene.start('Mini', { ...n.minigame, nodeId: `${state.chapter}:${n.id}` });
     } else if (n.endChapter) {
       this.scene.start('Card', { chapter: state.chapter + 1 });
     } else {

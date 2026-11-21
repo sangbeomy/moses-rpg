@@ -1,4 +1,4 @@
-import type { Chapter } from './types';
+import type { Chapter, StoryNode, MiniGame, Effects } from './types';
 
 // 이야기는 모두 데이터입니다. 새 장면은 여기에 노드를 추가하면 됩니다.
 // 성경 구절은 참조만 표기하고, 내용은 아이들 눈높이의 재구성입니다.
@@ -53,7 +53,107 @@ export const chapters: Chapter[] = [
       { id: 'worry', bg: 0xf0c040, icon: '✨', speaker: '하나님', verse: '출애굽기 4:11-12', text: '"내가 너와 함께 있겠다. 네 입을 지어 준 이가 누구겠느냐? 내가 네게 할 말을 가르쳐 주겠다."', next: 'aaron' },
       { id: 'aaron', bg: 0xf0c040, icon: '🤝', verse: '출애굽기 4:14-16', text: '하나님은 모세의 형 아론을 도우미로 세워 주셨어요. 모세는 혼자가 아니었답니다!' },
       { id: 'staff', bg: 0xf0c040, icon: '🐍', verse: '출애굽기 4:2-4', text: '모세의 손에 있던 평범한 지팡이는 하나님의 능력을 보이는 표징이 되었어요.', effects: { faith: 1 } },
-      { id: 'end', bg: 0x3a2f4a, icon: '🚶', text: '모세는 아론과 함께 다시 이집트를 향해 길을 떠났어요. (다음 이야기: 열 가지 재앙 — 곧 만나요!)', endChapter: true },
+      { id: 'end', bg: 0x3a2f4a, icon: '🚶', text: '모세는 아론과 함께 다시 이집트를 향해 길을 떠났어요.', endChapter: true },
+    ],
+  },
+  {
+    id: 4, title: '열 가지 재앙', verse: '출애굽기 5–12', start: 'start',
+    nodes: [
+      { id: 'start', bg: 0xc9a45c, icon: '🏛️', speaker: '모세', verse: '출애굽기 5:1', text: '"하나님께서 말씀하셨습니다. 내 백성을 보내어 광야에서 나를 예배하게 하라고요."' },
+      { id: 's2', bg: 0xc9a45c, icon: '👑', speaker: '바로', verse: '출애굽기 5:2', text: '"여호와가 누구냐? 나는 그를 모른다. 백성을 보내지 않겠다!" 바로는 오히려 히브리 사람들에게 더 힘든 일을 시켰어요.' },
+      { id: 's3', bg: 0x8a6a3a, icon: '🐍', verse: '출애굽기 7:10-12', text: '아론이 바로 앞에 지팡이를 던지자 뱀이 되었어요! 바로의 마술사들도 흉내를 냈지만, 아론의 뱀이 그들의 뱀을 삼켜 버렸어요.' },
+      { id: 's4', bg: 0x8a6a3a, icon: '😤', verse: '출애굽기 7:13', text: '그래도 바로의 마음은 돌처럼 굳어 있었어요. 하나님은 이집트에 열 가지 재앙으로 표징을 보이기로 하셨어요.' },
+      { id: 's5', bg: 0x3a2f4a, icon: '🔟', speaker: '하나님', text: '"두려워하지 마라. 내가 너와 함께 있겠다." 재앙마다 다른 방법으로 도전해 봐요. 실패해도 괜찮아요!' },
+
+      // ── 1. 피 ──
+      ...plague(1, { icon: '🩸', bg: 0x8a1c1c, verse: '출애굽기 7:14-25', title: '나일강이 피로 변하다',
+        warn: '모세가 나일강가에서 바로에게 말했어요. "백성을 보내지 않으시면, 하나님이 이 강물을 피로 바꾸실 것입니다." 아론이 지팡이를 높이 들 차례예요!',
+        mini: { kind: 'timing', icon: '🌊', prompt: '움직이는 표시가 초록 칸에 있을 때 "지팡이 들기!"를 눌러요 (3번)', goal: 3 },
+        result: '나일강 물이 피로 변했어요! 물고기가 죽고 강에서 냄새가 났어요. 그래도 바로의 마음은 그대로였어요.', effects: { faith: 1 } }),
+
+      // ── 2. 개구리 ──
+      ...plague(2, { icon: '🐸', bg: 0x4a8a3a, verse: '출애굽기 8:1-15', title: '개구리 떼',
+        warn: '"백성을 보내지 않으시면 개구리가 온 땅에 가득할 것입니다!" 개구리가 궁전과 침대와 부엌까지 올라왔어요.',
+        mini: { kind: 'tap', icon: '🐸', prompt: '뛰어다니는 개구리를 눌러서 강으로 돌려보내요! (10마리)', goal: 10, time: 20 },
+        result: '바로가 말했어요. "개구리를 없애 주면 백성을 보내 주겠다!" 모세가 기도하자 개구리가 사라졌어요. 그런데 바로는 숨을 돌리자 약속을 어기고 말았어요.', effects: { courage: 1 } }),
+
+      // ── 3. 이 (선택) ──
+      { id: 'p3a', bg: 0x9a8a5a, icon: '🦟', plague: 3, verse: '출애굽기 8:16-17', text: '이번에는 아론이 땅의 먼지를 치자, 먼지가 작은 벌레(이)로 변해 사람과 짐승에게 가득했어요!' },
+      { id: 'p3b', bg: 0x9a8a5a, icon: '🧙', plague: 3, verse: '출애굽기 8:18-19', text: '바로의 마술사들도 따라 해 보려 했지만 이번에는 할 수 없었어요. 그들이 바로에게 말했어요. "이것은 하나님의 손가락입니다."' },
+      { id: 'p3c', bg: 0x9a8a5a, icon: '🤔', plague: 3, speaker: '모세', text: '그래도 바로는 듣지 않았어요. 모세는 바로에게 무엇이라고 말할까요?',
+        choices: [
+          { text: '🙏 "이것은 하나님의 능력입니다. 그분을 믿으세요" (믿음 +1)', next: 'p3r', effects: { faith: 1 } },
+          { text: '💡 "마술사들도 못 하는 일이에요. 마음을 바꾸세요" (지혜 +1)', next: 'p3r', effects: { wisdom: 1 } },
+        ] },
+      { id: 'p3r', bg: 0x9a8a5a, icon: '😤', plague: 3, verse: '출애굽기 8:19', text: '그러나 바로의 마음은 더 굳어졌어요. 모세는 다음 재앙을 기다렸어요.' },
+
+      // ── 4. 파리 떼 ──
+      ...plague(4, { icon: '🐝', bg: 0xb08a3a, verse: '출애굽기 8:20-32', title: '파리 떼',
+        warn: '"파리 떼가 이집트의 집집마다 가득할 것입니다. 하지만 히브리 사람들이 사는 고센 땅은 지켜 주실 거예요."',
+        mini: { kind: 'tap', icon: '🐝', bad: '🐑', prompt: '파리 떼를 쫓아요! 고센 땅의 양 🐑은 누르면 안 돼요! (10마리)', goal: 10, time: 22 },
+        result: '고센 땅에는 파리가 한 마리도 없었어요. 바로는 "허락할 테니 이 땅에서 제사를 드려라" 하고는, 파리가 사라지자 또다시 마음을 바꿨어요.', effects: { wisdom: 1 } }),
+
+      // ── 5. 가축병 (선택) ──
+      { id: 'p5a', bg: 0x7a8a4a, icon: '🐄', plague: 5, verse: '출애굽기 9:1-4', text: '"이집트의 소와 양과 낙타에 심한 병이 돌 것입니다. 하지만 이스라엘의 가축은 구별해서 지켜 주실 거예요."' },
+      { id: 'p5b', bg: 0x7a8a4a, icon: '🐑', plague: 5, verse: '출애굽기 9:6-7', text: '다음 날, 이집트의 가축이 병이 들었어요. 그러나 이스라엘 사람들의 가축은 한 마리도 병들지 않았어요. 바로가 사람을 보내 확인해 보았지요.' },
+      { id: 'p5c', bg: 0x7a8a4a, icon: '🤔', plague: 5, speaker: '모세', text: '그래도 바로는 백성을 보내지 않았어요. 모세는 어떻게 할까요?',
+        choices: [
+          { text: '🙏 조용히 하나님께 기도한다 (믿음 +1)', next: 'p5r', effects: { faith: 1 } },
+          { text: '🛡️ 바로 앞에 다시 서서 담대히 말한다 (용기 +1)', next: 'p5r', effects: { courage: 1 } },
+        ] },
+      { id: 'p5r', bg: 0x7a8a4a, icon: '😤', plague: 5, text: '바로의 마음은 여전히 굳어 있었어요.' },
+
+      // ── 6. 종기 ──
+      ...plague(6, { icon: '🔥', bg: 0x6a3a2a, verse: '출애굽기 9:8-12', title: '악성 종기',
+        warn: '하나님이 모세에게 말씀하셨어요. "아궁이의 재를 한 줌 쥐고 바로 앞에서 하늘로 날려라." 이번에는 표시가 더 빨라요!',
+        mini: { kind: 'timing', icon: '💨', prompt: '재를 하늘로 날릴 때를 맞춰요! 이번엔 더 빨라요 (4번)', goal: 4, speed: 1.35 },
+        result: '재가 먼지가 되어 퍼지자 이집트 사람들과 짐승들에게 아픈 종기가 생겼어요. 마술사들도 모세 앞에 서 있을 수 없었어요. 그래도 바로의 마음은 굳어 있었어요.', effects: { courage: 1 } }),
+
+      // ── 7. 우박 ──
+      { id: 'p7a', bg: 0x4a5a7a, icon: '🌨️', plague: 7, verse: '출애굽기 9:18-21', text: '"내일 이맘때 이집트에 큰 우박이 쏟아질 것입니다. 밖에 있는 사람과 짐승은 집 안으로 피하게 하세요!" 바로의 신하 중 일부는 이 말을 듣고 서둘러 종과 가축을 집 안으로 데려갔어요.' },
+      ...plague(7, { icon: '🌨️', bg: 0x4a5a7a, verse: '출애굽기 9:22-35', title: '우박',
+        warn: '모세가 지팡이를 하늘로 뻗자 하늘이 어두워지고 우박이 쏟아졌어요! 좌우로 움직여 우박을 피해요! (마우스나 손가락으로 움직이거나 ◀ ▶ 키)',
+        mini: { kind: 'dodge', icon: '❄️', prompt: '마우스·손가락·◀ ▶ 키로 움직여서 우박을 피해요! 끝까지 버티면 성공!', time: 18 },
+        result: '바로가 말했어요. "이번에는 내가 잘못했다. 이제 너희를 보내겠다." 하지만 우박이 그치자 바로는 또 마음을 굳게 하고 말았어요.', effects: { courage: 1 } }, true),
+
+      // ── 8. 메뚜기 ──
+      ...plague(8, { icon: '🦗', bg: 0x7a8a2a, verse: '출애굽기 10:1-20', title: '메뚜기 떼',
+        warn: '바로의 신하들이 말했어요. "왕이시여, 이집트가 망하는 걸 아직도 모르십니까? 이 사람들을 보내십시오!" 그래도 바로는 고집을 부렸어요. 바람을 타고 메뚜기 떼가 몰려와요!',
+        mini: { kind: 'tap', icon: '🦗', prompt: '메뚜기가 곡식을 먹기 전에 빨리 쫓아요! (14마리)', goal: 14, time: 18 },
+        result: '메뚜기 떼가 들판의 풀과 나무의 열매를 모두 먹어 버렸어요. 바로는 "내 죄를 용서해 달라" 했지만, 메뚜기가 사라지자 또 마음을 바꿨어요.', effects: { wisdom: 1 } }),
+
+      // ── 9. 어둠 ──
+      ...plague(9, { icon: '🌑', bg: 0x0d0a18, verse: '출애굽기 10:21-29', title: '짙은 어둠',
+        warn: '"하늘로 손을 뻗어라!" 모세가 손을 들자 이집트 온 땅이 사흘 동안 깜깜한 어둠에 덮였어요. 그런데 이스라엘 사람들이 사는 곳에는 빛이 있었어요.',
+        mini: { kind: 'seek', icon: '🕯️', prompt: '어둠 속에서 빛을 움직여 숨은 등불 5개를 찾아요! (손가락이나 마우스로 움직여요)', goal: 5, time: 45 },
+        result: '바로가 말했어요. "썩 물러가라! 다시는 내 얼굴을 보지 마라!" 모세가 대답했어요. "맞습니다. 다시는 왕의 얼굴을 보지 않겠습니다."', effects: { faith: 1 } }),
+
+      // ── 10. 유월절 ──
+      { id: 'p10g', bg: 0x3a2a5a, icon: '🌙', plague: 10, speaker: '하나님', verse: '출애굽기 11:1; 12:12-13', text: '"이제 마지막 재앙을 내리겠다. 그 뒤에는 바로가 너희를 보낼 것이다. 이 밤에 내가 이집트를 지나가겠지만, 문설주에 어린양의 피가 발린 집은 내가 넘어가겠다."' },
+      ...plague(10, { icon: '🐑', bg: 0x3a2a5a, verse: '출애굽기 12:3-11', title: '유월절 준비',
+        warn: '모세가 이스라엘 백성에게 하나님의 말씀을 전했어요. 하나님이 가르쳐 주신 순서대로 준비해야 해요!',
+        mini: { kind: 'sequence', icon: '🏠', prompt: '하나님이 말씀하신 순서대로 눌러요!',
+          steps: ['🐑 흠 없는 어린양을 골라요', '🩸 양의 피를 집 문설주에 발라요', '🍞 집 안에서 가족과 함께 식사해요', '🎒 서둘러 떠날 준비를 해요'] },
+        result: '그날 밤, 하나님이 이집트를 지나가시며 마지막 재앙을 내리셨어요. 이집트 온 땅에 큰 울음소리가 퍼졌어요. 하지만 문설주에 피를 바른 이스라엘의 집은 하나님이 "넘어가" 주셨어요. 이것이 \'유월절\'이에요.', effects: { faith: 2 } }),
+      { id: 'p10b', bg: 0x3a2a5a, icon: '😢', speaker: '바로', verse: '출애굽기 12:31-32', text: '바로는 밤중에 모세와 아론을 불렀어요. "너희는 일어나 내 백성 가운데서 떠나라! 가서 말한 대로 여호와를 섬겨라. 양과 소도 데리고 가라!"' },
+      { id: 'p10c', bg: 0xd9a441, icon: '🌅', verse: '출애굽기 12:37', text: '이스라엘 백성은 서둘러 이집트를 떠나기 시작했어요. 400년 넘게 종살이하던 땅을 드디어 벗어나는 거예요!', effects: { wisdom: 1 } },
+      { id: 'p10d', bg: 0x3a2f4a, icon: '🚶', speaker: '모세', text: '하지만 모세와 백성 앞에는 아직 넓은 바다가 기다리고 있었어요… (다음 이야기: 홍해를 건너다)', endChapter: true },
     ],
   },
 ];
+
+// 재앙 한 편 = 경고(a) → 미니게임(m) → 결과(r)
+function plague(n: number, p: {
+  icon: string; bg: number; verse: string; title: string; warn: string;
+  mini: Omit<MiniGame, 'title' | 'win' | 'plague' | 'bg'>; result: string; effects?: Effects;
+}, skipIntro = false): StoryNode[] {
+  const intro: StoryNode[] = skipIntro ? [] : [
+    { id: `p${n}a`, bg: p.bg, icon: p.icon, plague: n, speaker: '모세', verse: p.verse, text: p.warn },
+  ];
+  return [
+    ...intro,
+    { id: `p${n}m`, bg: p.bg, icon: p.icon, plague: n, text: skipIntro ? p.warn : `${n}번째 재앙: ${p.title}!`,
+      minigame: { ...p.mini, title: p.title, plague: n, bg: p.bg, win: `p${n}r` } },
+    { id: `p${n}r`, bg: p.bg, icon: p.icon, plague: n, verse: p.verse, text: p.result, effects: p.effects },
+  ];
+}

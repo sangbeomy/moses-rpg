@@ -13,9 +13,9 @@ export class CardScene extends Phaser.Scene {
 
     if (!ch) {
       txt(this, W / 2, 120, '🌟', 90).setOrigin(0.5);
-      txt(this, W / 2, 230, '1장 끝!', 56, '#ffe9a8').setOrigin(0.5);
+      txt(this, W / 2, 230, '모세 이야기 1부 끝!', 52, '#ffe9a8').setOrigin(0.5);
       txt(this, W / 2, 300, `믿음 ${state.faith}  ·  용기 ${state.courage}  ·  지혜 ${state.wisdom}`, 28, '#d8cdf2').setOrigin(0.5);
-      txt(this, W / 2, 350, '다음 이야기: 열 가지 재앙과 홍해 — 곧 만나요!', 22, '#aaa0c8').setOrigin(0.5);
+      txt(this, W / 2, 350, '다음 이야기: 홍해를 건너다 — 곧 만나요!', 22, '#aaa0c8').setOrigin(0.5);
       button(this, W / 2, 435, 260, 56, '처음으로', () => this.scene.start('Title'));
       return;
     }
